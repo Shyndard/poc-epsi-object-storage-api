@@ -10,6 +10,10 @@ interface FilesResponse {
   data: any[];
 }
 
+interface CreatedFileResponse {
+  fileUrl: string;
+}
+
 const client = new AWS.S3({
   endpoint: OS_ENDPOINT,
   accessKeyId: OS_KEY,
@@ -17,26 +21,34 @@ const client = new AWS.S3({
   region: OS_REGION
 });
 
-export const createFile = (bucketName: string, fileName: string, file: any) : Promise<any> => {
-    return new Promise((resolve, reject) => {
-        let params = {
-            Bucket: bucketName,
-            Key: fileName,
-            Body: file
-          };
-        client.upload(params, {partSize: 5*1024*1024, queueSize: 10}, (err, data) => {
-            if (!err) {
-                resolve({
-                    fileUrl : data.Location
-                });
-            } else {
-                reject({
-                    error: err
-                });
-            }
-        });
-    });
-}
+export const createFile = (
+  bucketName: string,
+  fileName: string,
+  file: any
+): Promise<CreatedFileResponse> => {
+  return new Promise((resolve, reject) => {
+    let params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Body: file
+    };
+    client.upload(
+      params,
+      { partSize: 5 * 1024 * 1024, queueSize: 10 },
+      (err, data) => {
+        if (!err) {
+          resolve({
+            fileUrl: data.Location
+          });
+        } else {
+          reject({
+            error: err
+          });
+        }
+      }
+    );
+  });
+};
 
 export const getFiles = (bucketName: string): Promise<FilesResponse> => {
   return new Promise((resolve, reject) => {
@@ -65,4 +77,4 @@ export const getFiles = (bucketName: string): Promise<FilesResponse> => {
       }
     });
   });
-}
+};
