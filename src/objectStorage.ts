@@ -30,7 +30,8 @@ export const createFile = (
     let params = {
       Bucket: bucketName,
       Key: fileName,
-      Body: file
+      Body: file,
+      ACL: 'public-read'
     };
     client.upload(
       params,
