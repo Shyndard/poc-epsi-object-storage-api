@@ -38,7 +38,7 @@ server.post("/document", function(req: any, reply) {
   }
 });
 
-server.listen(8080, (err, address) => {
+server.listen(API_PORT, (err, address) => {
   if (err) throw err;
   server.log.info(`server listening on ${address}`);
 });
